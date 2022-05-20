@@ -53,8 +53,10 @@ namespace TicTacToe
             {
                 textBlock.Text = "⭕";
             }
-
-            CheckWinner();
+            if (counter > 4)
+            {
+                CheckWinner();
+            }
             counter++;
         }
 
@@ -74,7 +76,7 @@ namespace TicTacToe
                     {                        
                         if(temp != GetTextBlock(i, j).Text)
                         {
-                            continue;
+                            break;
                         }
                     }
                     else
@@ -99,7 +101,7 @@ namespace TicTacToe
                     {
                         if (temp != GetTextBlock(j, i).Text)
                         {
-                            continue;
+                            break;
                         }
                     }
                     else
@@ -110,6 +112,20 @@ namespace TicTacToe
                         }
                     }
                 }
+            }
+
+            if (GetTextBlock(1,0).Text == GetTextBlock(2, 1).Text && 
+                GetTextBlock(2, 1).Text == GetTextBlock(3, 2).Text && 
+                GetTextBlock(3, 2).Text != "")
+            {
+                Win();
+            }
+            
+            if (GetTextBlock(1, 2).Text == GetTextBlock(2, 1).Text &&
+                GetTextBlock(2, 1).Text == GetTextBlock(3, 0).Text &&
+                GetTextBlock(3, 0).Text != "")
+            {
+                Win();
             }
         }
 
