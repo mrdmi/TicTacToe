@@ -21,34 +21,27 @@ namespace TicTacToe
     public partial class MainWindow : Window
     {
 
-        private int counter; 
+        private int counter = 1; 
         public MainWindow()
         {
             InitializeComponent();
-            SetUp();
-        }
 
-        private void SetUp()
-        {
-            counter = 1;
-
-            foreach (TextBlock textBlock in gameField.Children.OfType<TextBlock>())
-            {
-                textBlock.Text = "&";
-                textBlock.Visibility = Visibility.Hidden;
-            }
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            SetUp();
+            foreach (TextBlock textBlock in gameField.Children.OfType<TextBlock>())
+            {
+                textBlock.Text = "";
+                counter = 1;
+            }
         }
 
         private void TextBlock_MouseDown(object sender, MouseButtonEventArgs e)
         {
             TextBlock textBlock = sender as TextBlock;
 
-            if (textBlock.Text != "&")
+            if (textBlock.Text != "")
                 return;
 
             if (counter % 2 == 1)
@@ -60,7 +53,6 @@ namespace TicTacToe
                 textBlock.Text = "⭕";
             }
 
-            textBlock.Visibility = Visibility.Visible;
             counter++;
         }
     }
