@@ -34,6 +34,7 @@ namespace TicTacToe
             {
                 textBlock.Text = "";
                 counter = 1;
+                textBlock.MouseDown += TextBlock_MouseDown;
             }
         }
 
@@ -53,7 +54,87 @@ namespace TicTacToe
                 textBlock.Text = "⭕";
             }
 
+            CheckWinner();
             counter++;
+        }
+
+        private void CheckWinner()
+        {
+        string temp = "";
+
+            for (int i = 1; i < 4; i++)
+            {
+                for(int j = 0; j < 3; j++)
+                {
+                    if(j == 0)
+                    {
+                        temp = GetTextBlock(i, j).Text;
+                    }
+                    else if(j == 1)
+                    {                        
+                        if(temp != GetTextBlock(i, j).Text)
+                        {
+                            continue;
+                        }
+                    }
+                    else
+                    {
+                        if(temp == GetTextBlock(i, j).Text && temp != "")
+                        {
+                            Win();
+                        }
+                    }
+                }
+            }
+
+            for (int i = 0; i < 3; i++)
+            {
+                for (int j = 1; j < 4; j++)
+                {
+                    if (j == 1)
+                    {
+                        temp = GetTextBlock(j, i).Text;
+                    }
+                    else if (j == 2)
+                    {
+                        if (temp != GetTextBlock(j, i).Text)
+                        {
+                            continue;
+                        }
+                    }
+                    else
+                    {
+                        if (temp == GetTextBlock(j, i).Text && temp != "")
+                        {
+                            Win();
+                        }
+                    }
+                }
+            }
+        }
+
+
+        private TextBlock GetTextBlock(int row, int column)
+        {
+            foreach (TextBlock textBlock in gameField.Children.OfType<TextBlock>())
+            {
+                if (Grid.GetRow(textBlock) == row
+                      &&
+                   Grid.GetColumn(textBlock) == column)
+                {
+                    return textBlock;
+                }
+            }
+
+            return null;
+        }
+
+        private void Win()
+        {
+            foreach (TextBlock textBlock in gameField.Children.OfType<TextBlock>())
+            {
+                textBlock.MouseDown -= TextBlock_MouseDown;
+            }
         }
     }
 }
