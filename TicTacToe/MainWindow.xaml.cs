@@ -31,6 +31,8 @@ namespace TicTacToe
             InitializeComponent();
             score = player1Wins + " " + deadHeat + " " + player2Wins;
             scoreTextBlock.Text = "score\n" + score;
+            player1TextBlock.Background = Brushes.LightBlue;
+            player2TextBlock.Background = Brushes.White;
 
         }
 
@@ -49,6 +51,16 @@ namespace TicTacToe
             player2TextBlock.Text = "player 2";
             scoreTextBlock.Text = "score\n" + score;
             firstMove = !firstMove;
+            if (firstMove)
+            {
+                player1TextBlock.Background = Brushes.LightBlue;
+                player2TextBlock.Background = Brushes.White;
+            }
+            else
+            {
+                player2TextBlock.Background = Brushes.LightBlue;
+                player1TextBlock.Background = Brushes.White;
+            }
         }
 
         private void TextBlock_MouseDown(object sender, MouseButtonEventArgs e)
@@ -78,6 +90,8 @@ namespace TicTacToe
                 TextBlockEventDisabler(true);
                 deadHeat++;
             }
+
+            BrushTextBlok();
         }
 
         private bool CheckWinner()
@@ -226,6 +240,13 @@ namespace TicTacToe
                     textBlock.MouseDown += TextBlock_MouseDown;
                 }
             }
+        }
+
+        private void BrushTextBlok()
+        {
+            Brush brush = player1TextBlock.Background;
+            player1TextBlock.Background = player2TextBlock.Background;
+            player2TextBlock.Background = brush;
         }
     }
 }
