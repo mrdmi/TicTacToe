@@ -20,11 +20,17 @@ namespace TicTacToe
     /// </summary>
     public partial class MainWindow : Window
     {
-
+        private int player1Wins = 0;
+        private int player2Wins = 0;
+        private int deadHeat = 0;
+        private string score;
+        private bool firstMove = true;
         private int counter = 1; 
         public MainWindow()
         {
             InitializeComponent();
+            score = player1Wins + " " + deadHeat + " " + player2Wins;
+            scoreTextBlock.Text = "score\n" + score;
 
         }
 
@@ -35,12 +41,20 @@ namespace TicTacToe
                 textBlock.Text = "";
                 counter = 1;
                 textBlock.MouseDown += TextBlock_MouseDown;
+                textBlock.Foreground = Brushes.Black;
             }
+
+            score = player1Wins + " " + deadHeat + " " + player2Wins;
+            player1TextBlock.Text = "player 1";
+            player2TextBlock.Text = "player 2";
+            scoreTextBlock.Text = "score\n" + score;
+            firstMove = !firstMove;
         }
 
         private void TextBlock_MouseDown(object sender, MouseButtonEventArgs e)
         {
             TextBlock textBlock = sender as TextBlock;
+
 
             if (textBlock.Text != "")
                 return;
@@ -55,12 +69,18 @@ namespace TicTacToe
             }
             if (counter > 4)
             {
-                CheckWinner();
+                if (CheckWinner()) return;
             }
+
             counter++;
+            if(counter == 10)
+            {
+                TextBlockEventDisabler(true);
+                deadHeat++;
+            }
         }
 
-        private void CheckWinner()
+        private bool CheckWinner()
         {
         string temp = "";
 
@@ -84,6 +104,10 @@ namespace TicTacToe
                         if(temp == GetTextBlock(i, j).Text && temp != "")
                         {
                             Win();
+                            GetTextBlock(i, j).Foreground = Brushes.Red;
+                            GetTextBlock(i, j - 1).Foreground = Brushes.Red;
+                            GetTextBlock(i, j - 2).Foreground = Brushes.Red;
+                            return true;
                         }
                     }
                 }
@@ -109,16 +133,24 @@ namespace TicTacToe
                         if (temp == GetTextBlock(j, i).Text && temp != "")
                         {
                             Win();
+                            GetTextBlock(j, i).Foreground = Brushes.Red;
+                            GetTextBlock(j - 1, i).Foreground = Brushes.Red;
+                            GetTextBlock(j - 2, i).Foreground = Brushes.Red;
+                            return true;
                         }
                     }
                 }
             }
 
-            if (GetTextBlock(1,0).Text == GetTextBlock(2, 1).Text && 
+            if (GetTextBlock(1, 0).Text == GetTextBlock(2, 1).Text && 
                 GetTextBlock(2, 1).Text == GetTextBlock(3, 2).Text && 
                 GetTextBlock(3, 2).Text != "")
             {
                 Win();
+                GetTextBlock(1, 0).Foreground = Brushes.Red;
+                GetTextBlock(2, 1).Foreground = Brushes.Red;
+                GetTextBlock(3, 2).Foreground = Brushes.Red;
+                return true;
             }
             
             if (GetTextBlock(1, 2).Text == GetTextBlock(2, 1).Text &&
@@ -126,7 +158,12 @@ namespace TicTacToe
                 GetTextBlock(3, 0).Text != "")
             {
                 Win();
+                GetTextBlock(1, 2).Foreground = Brushes.Red;
+                GetTextBlock(2, 1).Foreground = Brushes.Red;
+                GetTextBlock(3, 0).Foreground = Brushes.Red;
+                return true;
             }
+            return false;
         }
 
 
@@ -147,9 +184,47 @@ namespace TicTacToe
 
         private void Win()
         {
-            foreach (TextBlock textBlock in gameField.Children.OfType<TextBlock>())
+            TextBlockEventDisabler(true);
+            if(counter % 2 == 1)
             {
-                textBlock.MouseDown -= TextBlock_MouseDown;
+                if (firstMove)
+                {
+                    player1Wins++;
+                }
+                else
+                {
+                    player2Wins++;
+                }
+            }
+            else
+            {
+                if (firstMove)
+                {
+                    player2Wins++;
+                }
+                else
+                {
+                    player1Wins++;
+                }
+            }
+
+        }
+
+        private void TextBlockEventDisabler(bool on)
+        {
+            if (on)
+            {
+                foreach (TextBlock textBlock in gameField.Children.OfType<TextBlock>())
+                {
+                    textBlock.MouseDown -= TextBlock_MouseDown;
+                }
+            }
+            else
+            {
+                foreach (TextBlock textBlock in gameField.Children.OfType<TextBlock>())
+                {
+                    textBlock.MouseDown += TextBlock_MouseDown;
+                }
             }
         }
     }
